@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Langosta Ahumada Presupuesto</title>
+</head>
+<body>
+    <script> 
+    
+    //DATOS ;)//
+         personas = prompt("Ingrese el número de personas");
+
+         //Codigo
+
+        if (personas < 200) {
+            precioFinal = personas * 95;
+            alert("PRECIO FINAL: $" + precioFinal)
+        } else if (personas > 200 && personas <= 300) {
+            precioFinal = personas * 85;
+            alert("PRECIO FINAL: $" + precioFinal)
+        } else if (personas > 300) {
+            precioFinal = personas * 75;
+            alert("PRECIO FINAL: $" + precioFinal)
+        } else {
+            alert("Ingrese un número válido de personas");
+        }
+
+    </script>
+</body>
+</html>
