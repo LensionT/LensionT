@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="styles/page.css">
+    <link rel="stylesheet" href="styles/menu.css">
+    <link rel="stylesheet" href="styles/table.css">
+    <link rel="stylesheet" href="styles/form.css">
+    <style>
+        /* Formato de la pagina :) */
+        #estadisticas {
+            margin-top: 7px;
+            font-size: 10px; /* Tamaño de la fuente */
+        }
+
+        #estadisticas h5 {
+            margin-top: 2px;
+        }
+
+        #estadisticas p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="content" style="font-size: 18px;"> <!-- Tamaño de fuente -->
+        <header>
+            <img src="img/logoCervantes.png" alt="Institucion Cervantes">
+        </header>
+
+        <aside>
+            <p>
+                Programación I <br> PARCIAL 2
+            </p>
+            <h5>LAUTARO TORTI</h5>
+        </aside>
+
+        <main>
+            <section>
+                <h4>LISTADO</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Matricula</th>
+                            <th>Nombre y Apellido</th>
+                            <th>Materia</th>
+                            <th>Ciclo lectivo</th>
+                            <th>Nota parcial 1</th>
+                            <th>Nota parcial 2</th>
+                            <th>Nota trabajo práctico</th>
+                        </tr>
+                    </thead>
+                    <tbody id="alumnos-lista">
+                    </tbody>
+                </table>
+            </section>
+
+            <section>
+                <div id="estadisticas"></div>
+            </section>
+        </main>
+
+        <footer>
+            <h5>Institucion Cervantes - Analista de Sistema</h5>
+        </footer>
+    </div>
+
+    <script>
+        let contadorAlumnos = 0;
+        const estadisticas = {
+            ciclos: {},
+            materias: {},
+            aprobados: {},
+            desaprobados: {},
+            promocionados: {}
+        };
+
+        function agregarAlumno(matricula, nombre, materia, ciclo, nota1, nota2, notaTP) {
+            if (contadorAlumnos >= 3) {
+                alert("Ya se han cargado 3 alumnos. No se pueden agregar más.");
+                return;
+            }
+
+            const tabla = document.getElementById("alumnos-lista");
+            const fila = document.createElement("tr");
+            fila.innerHTML = `
+                <td>${matricula}</td>
+                <td>${nombre}</td>
+                <td>${materia}</td>
+                <td>${ciclo}</td>
+                <td>${nota1}</td>
+                <td>${nota2}</td>
+                <td>${notaTP}</td>
+            `;
+            tabla.appendChild(fila);
+
+            // Estadisticas 
+            if (!estadisticas.ciclos[ciclo]) {
+                estadisticas.ciclos[ciclo] = 1;
+            } else {
+                estadisticas.ciclos[ciclo]++;
+            }
+
+            if (!estadisticas.materias[materia]) {
+                estadisticas.materias[materia] = 1;
+            } else {
+                estadisticas.materias[materia]++;
+            }
+
+            const promedio = (nota1 + nota2 + notaTP) / 3;
+
+            if (promedio >= 4) {
+                if (!estadisticas.aprobados[materia]) {
+                    estadisticas.aprobados[materia] = 1;
+                } else {
+                    estadisticas.aprobados[materia]++;
+                }
+            } else {
+                if (!estadisticas.desaprobados[materia]) {
+                    estadisticas.desaprobados[materia] = 1;
+                } else {
+                    estadisticas.desaprobados[materia]++;
+                }
+            }
+
+            if (promedio >= 8) {
+                if (!estadisticas.promocionados[materia]) {
+                    estadisticas.promocionados[materia] = 1;
+                } else {
+                    estadisticas.promocionados[materia]++;
+                }
+            }
+
+            contadorAlumnos++;
+            mostrarEstadisticas();
+        }
+
+        function mostrarEstadisticas() {
+            const estadisticasContainer = document.getElementById("estadisticas");
+            estadisticasContainer.innerHTML = "<h5>Estadísticas:</h5>";
+
+            estadisticasContainer.innerHTML += "<p>Cantidad de Alumnos por ciclo lectivo actual:</p>";
+            for (const ciclo in estadisticas.ciclos) {
+                estadisticasContainer.innerHTML += `<p>Ciclo ${ciclo}: ${estadisticas.ciclos[ciclo]}</p>`;
+            }
+
+            estadisticasContainer.innerHTML += "<p>Cantidad de Alumnos por materia del ciclo actual:</p>";
+            for (const materia in estadisticas.materias) {
+                estadisticasContainer.innerHTML += `<p>${materia}: ${estadisticas.materias[materia]}</p>`;
+            }
+
+            estadisticasContainer.innerHTML += "<p>Cantidad de aprobados por materia:</p>";
+            for (const materia in estadisticas.aprobados) {
+                estadisticasContainer.innerHTML += `<p>${materia}: ${estadisticas.aprobados[materia]}</p>`;
+            }
+
+            estadisticasContainer.innerHTML += "<p>Cantidad de desaprobados por materia:</p>";
+            for (const materia in estadisticas.desaprobados) {
+                estadisticasContainer.innerHTML += `<p>${materia}: ${estadisticas.desaprobados[materia]}</p>`;
+            }
+
+            estadisticasContainer.innerHTML += "<p>Cantidad de promocionados por materia:</p>";
+            for (const materia in estadisticas.promocionados) {
+                estadisticasContainer.innerHTML += `<p>${materia}: ${estadisticas.promocionados[materia]}</p>`;
+            }
+        }
+
+        // DATOS DE ALUMNOS
+        window.addEventListener("load", function() {
+            for (let i = 0; i < 3; i++) {
+                const matricula = prompt("Ingrese la matricula del alumno:");
+                const nombre = prompt("Ingrese el nombre y apellido del alumno:");
+                const materia = prompt("Ingrese la materia del alumno:");
+                const ciclo = prompt("Ingrese el ciclo lectivo:");
+                const nota1 = parseFloat(prompt("Ingrese la nota parcial 1:"));
+                const nota2 = parseFloat(prompt("Ingrese la nota parcial 2:"));
+                const notaTP = parseFloat(prompt("Ingrese la nota del trabajo práctico:"));
+
+                agregarAlumno(matricula, nombre, materia, ciclo, nota1, nota2, notaTP);
+            }
+        });
+    </script>
+</body>
+
+</html>
